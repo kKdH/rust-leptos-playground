@@ -1,2 +1,35 @@
 = rust-leptos-playground =
 
+== Setup ==
+
+.Install `rustup`.
+[source, bash]
+----
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+----
+
+.Install _nightly_ toolchain.
+[source, bash]
+----
+rustup toolchain install nightly
+----
+
+.Install WASM target.
+[source, bash]
+----
+rustup target add wasm32-unknown-unknown
+----
+
+.Install `trunk`.
+[source, bash]
+----
+cargo install trunk
+----
+
+== Compile / Run ==
+
+.Compile the project and open it in a browser.
+[source, bash]
+----
+trunk serve --open
+----
