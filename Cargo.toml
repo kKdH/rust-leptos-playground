@@ -3,5 +3,12 @@ name = "rust-leptos-playground"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-leptos = "0.2.5"
+[workspace]
+members = [
+    "hello_oidc",
+    "hello_axum/backend",
+    "hello_axum/frontend",
+]
+
+[workspace.package]
+edition = "2021"

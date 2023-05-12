@@ -1,0 +1,12 @@
+[package]
+name = "rust-leptos-playground-hello-axum-backend"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+axum = "0.6.17"
+serde = { version = "1.0.160", features = ["derive"] }
+serde_json = "1.0.96"
+tokio = { version = "1.28.0", features = ["full"] }
+tower = "0.4.13"
+tower-http = { version = "0.4.0", features = ["fs"] }

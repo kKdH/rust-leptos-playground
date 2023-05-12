@@ -1,6 +1,8 @@
 = rust-leptos-playground =
 
-== Setup ==
+== Development ==
+
+=== Setup ===
 
 .Install `rustup`.
 [source, bash]
@@ -26,10 +28,50 @@ rustup target add wasm32-unknown-unknown
 cargo install trunk
 ----
 
-== Compile / Run ==
+=== Compile / Run ===
 
 .Compile the project and open it in a browser.
 [source, bash]
 ----
 trunk serve --open
+----
+
+== KEYCLOAK ==
+
+[NOTE]
+.Working directory
+====
+It is assumed that the following commands are executed from within this project's root directory.
+====
+
+.Create a directory with read/write permissions where KEYCLOAK can persist its data.
+[source, bash]
+----
+mkdir --mode 777 ./keycloak
+----
+
+.Start Keycloak in development mode exposed on port 8000 with an admin user.
+[source, bash]
+----
+docker run \
+  --name keycloak \
+  --detach \
+  --publish 8000:8080 \
+  --volume $(pwd)/keycloak:/opt/keycloak/data \
+  --env KEYCLOAK_ADMIN=admin \
+  --env KEYCLOAK_ADMIN_PASSWORD=admin \
+  quay.io/keycloak/keycloak:21.1.0 \
+  start-dev
+----
+
+.Subsequent starts can omit the environment variables for username and password.
+[source, bash]
+----
+docker run \
+  --name keycloak \
+  --detach \
+  --publish 8000:8080 \
+  --volume $(pwd)/keycloak:/opt/keycloak/data \
+  quay.io/keycloak/keycloak:21.1.0 \
+  start-dev
 ----
