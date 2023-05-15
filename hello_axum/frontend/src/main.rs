@@ -2,7 +2,7 @@ mod app;
 
 use leptos::*;
 
-use crate::app::{App, AppProps};
+use crate::app::App;
 
 fn main() {
     _ = console_log::init_with_level(log::Level::Debug);

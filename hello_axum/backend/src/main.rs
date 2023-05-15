@@ -5,18 +5,21 @@ use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::{Json, Router};
-use axum::routing::{get, post};
+use axum::routing::get;
 use serde::{Deserialize, Serialize};
 use tower_http::services::ServeDir;
 use tower::util::ServiceExt;
 
 #[derive(Clone)]
 struct AppState {
+    counter: i32
 }
 
 impl Default for AppState {
     fn default() -> Self {
-        AppState {}
+        AppState {
+            counter: 0,
+        }
     }
 }
 
@@ -34,7 +37,8 @@ async fn main() {
         .route(
             "/api/plant",
             get(get_handler)
-                .put(put_handler)
+                .post(post_handler)
+                .delete(delete_handler)
         )
         .fallback_service(get(|req| async move {
             match ServeDir::new(String::from("dist")).oneshot(req).await {
@@ -57,10 +61,16 @@ async fn main() {
         .expect("Unable to start server");
 }
 
-async fn get_handler() -> Response {
-    (StatusCode::OK, Json(Counter { value: 42 })).into_response()
+async fn get_handler(State(state): SharedAppState) -> Response {
+    (StatusCode::OK, Json(Counter { value: state.read().unwrap().counter })).into_response()
 }
 
-async fn put_handler() -> Response {
+async fn post_handler(State(state): SharedAppState) -> Response {
+    state.write().unwrap().counter += 1;
+    StatusCode::OK.into_response()
+}
+
+async fn delete_handler(State(state): SharedAppState) -> Response {
+    state.write().unwrap().counter = 0;
     StatusCode::OK.into_response()
 }
