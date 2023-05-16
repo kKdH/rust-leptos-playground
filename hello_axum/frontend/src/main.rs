@@ -1,4 +1,5 @@
 mod app;
+mod charts;
 
 use leptos::*;
 

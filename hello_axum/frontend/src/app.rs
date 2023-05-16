@@ -1,7 +1,10 @@
 use leptos::*;
+use leptos_router::*;
 use leptos::ev::MouseEvent;
 use reqwasm::http::Request;
 use serde::{Deserialize, Serialize};
+
+use crate::charts::{PieChart};
 
 #[derive(thiserror::Error, Clone, Debug)]
 pub enum FetchError {
@@ -45,6 +48,7 @@ async fn reset_counter() -> Result<(), FetchError> {
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
 
+    create_signal(cx, "");
     let count = create_action(cx, |_| async move {
         fetch_counter().await.unwrap_or(Counter { value: 0 })
     });
@@ -65,10 +69,19 @@ pub fn App(cx: Scope) -> impl IntoView {
     };
 
     view! { cx,
-        <h1>"Hello Leptos"</h1>
-        <button on:click=fetch_callback>"Fetch"</button>
-        <button on:click=inc_callback>"Inc"</button>
-        <button on:click=reset_callback>"Reset"</button>
-        <p>"Counter: " { move || format!("{}", count.value().get().map(|counter| counter.value).unwrap_or(0)) }</p>
+        // <h1>"Hello Leptos"</h1>
+        // <button on:click=fetch_callback>"Fetch"</button>
+        // <button on:click=inc_callback>"Inc"</button>
+        // <button on:click=reset_callback>"Reset"</button>
+        // <p>"Counter: " { move || format!("{}", count.value().get().map(|counter| counter.value).unwrap_or(0)) }</p>
+        <Router>
+            <Routes>
+                <Route
+                    path="/piechart"
+                    view=move |cx| view! { cx,  <PieChart/> }
+                >
+                </Route>
+            </Routes>
+        </Router>
     }
 }
