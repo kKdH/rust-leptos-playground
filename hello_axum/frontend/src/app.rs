@@ -4,7 +4,7 @@ use leptos::ev::MouseEvent;
 use reqwasm::http::Request;
 use serde::{Deserialize, Serialize};
 
-use crate::charts::{PieChart};
+use crate::charts::{ColorPallet, PieChart, PieChartData, PieChartItem};
 
 #[derive(thiserror::Error, Clone, Debug)]
 pub enum FetchError {
@@ -68,6 +68,61 @@ pub fn App(cx: Scope) -> impl IntoView {
         count.dispatch(());
     };
 
+    let items = vec![
+        PieChartItem {
+            name: String::from("A"),
+            value: 50.0,
+        },
+        PieChartItem {
+            name: String::from("B"),
+            value: 30.0,
+        },
+        PieChartItem {
+            name: String::from("C"),
+            value: 80.0,
+        },
+        PieChartItem {
+            name: String::from("C"),
+            value: 10.0,
+        },
+        PieChartItem {
+            name: String::from("C"),
+            value: 35.0,
+        },
+        PieChartItem {
+            name: String::from("C"),
+            value: 50.0,
+        },
+        PieChartItem {
+            name: String::from("C"),
+            value: 78.0,
+        }
+    ];
+
+    let pie_chart_data_1 = create_rw_signal(cx, PieChartData {
+        items: Clone::clone(&items),
+        caption: String::from("Examples PieChart (Material)"),
+        color_pallet: ColorPallet::Material,
+    });
+
+    let pie_chart_data_2 = create_rw_signal(cx, PieChartData {
+        items: Clone::clone(&items),
+        caption: String::from("Examples PieChart (OrangeFire)"),
+        color_pallet: ColorPallet::OrangeFire,
+    });
+
+    let pie_chart_data_3 = create_rw_signal(cx, PieChartData {
+        items: Clone::clone(&items),
+        caption: String::from("Examples PieChart (DarkBlue)"),
+        color_pallet: ColorPallet::DarkBlue,
+    });
+
+    let pie_chart_data_4 = create_rw_signal(cx, PieChartData {
+        items: Clone::clone(&items),
+        caption: String::from("Examples PieChart (Default)"),
+        color_pallet: ColorPallet::Default,
+    });
+
     view! { cx,
         // <h1>"Hello Leptos"</h1>
         // <button on:click=fetch_callback>"Fetch"</button>
@@ -78,7 +133,12 @@ pub fn App(cx: Scope) -> impl IntoView {
             <Routes>
                 <Route
                     path="/piechart"
-                    view=move |cx| view! { cx,  <PieChart/> }
+                    view=move |cx| view! { cx,
+                        <PieChart data=pie_chart_data_1.read_only() />
+                        <PieChart data=pie_chart_data_2.read_only() />
+                        <PieChart data=pie_chart_data_3.read_only() />
+                        <PieChart data=pie_chart_data_4.read_only() />
+                    }
                 >
                 </Route>
             </Routes>
