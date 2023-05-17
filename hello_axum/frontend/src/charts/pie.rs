@@ -123,33 +123,33 @@ fn Wedge<A, B, C>(
     where A: Clone + Display + 'static,
           B: Fn() -> () + 'static,
           C: Fn() -> () + 'static {
+
     let WedgeData { value: _, x0, y0, x1, y1, x2, y2, x3, y3, outer_radius: r1, inner_radius: r2, color} = data.get();
 
-    let fill = move || {
-        if selected.get() {
-            u32::MAX.into_color_code()
+    let path_commands = move || {
+        const scale: f32 = 1.075;
+        let (x0, y0, x1, y1) = if selected.get() {
+            (x0 * scale, y0 * scale, x1 * scale, y1 * scale)
         }
         else {
-            color.into_color_code()
-        }
-    };
+            (x0, y0, x1, y1)
+        };
 
-    let stroke = move || {
-        color.into_color_code()
+        format!("\
+            M {x0} {y0} \
+            A {r1} {r1} 0 0 1 {x1} {y1} \
+            L {x2} {y2} \
+            A {r2} {r2} 0 0 0 {x3} {y3}"
+        )
     };
 
     view! { cx,
         <path
             on:mouseenter=move |_| on_mouse_enter()
             on:mouseleave=move |_| on_mouse_exit()
-            fill=fill
-            stroke=stroke
-            d={format!("\
-                M {x0} {y0} \
-                A {r1} {r1} 0 0 1 {x1} {y1} \
-                L {x2} {y2} \
-                A {r2} {r2} 0 0 0 {x3} {y3}"
-            )}>
+            fill=move || color.into_color_code()
+            stroke="none"
+            d=path_commands>
         </path>
     }
 }
