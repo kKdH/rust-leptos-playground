@@ -3,7 +3,7 @@ use core::f32::consts::PI;
 use std::fmt::Display;
 
 use leptos::*;
-use crate::charts::{ColorPallet, DEFAULT_COLOR_PALLET, IntoColorCode};
+use crate::charts::{ColorPallet, IntoColorCode};
 
 #[derive(Clone)]
 pub struct PieChartData {
@@ -127,9 +127,9 @@ fn Wedge<A, B, C>(
     let WedgeData { value: _, x0, y0, x1, y1, x2, y2, x3, y3, outer_radius: r1, inner_radius: r2, color} = data.get();
 
     let path_commands = move || {
-        const scale: f32 = 1.075;
+        const SCALE: f32 = 1.075;
         let (x0, y0, x1, y1) = if selected.get() {
-            (x0 * scale, y0 * scale, x1 * scale, y1 * scale)
+            (x0 * SCALE, y0 * SCALE, x1 * SCALE, y1 * SCALE)
         }
         else {
             (x0, y0, x1, y1)

@@ -4,7 +4,7 @@ use leptos::ev::MouseEvent;
 use reqwasm::http::Request;
 use serde::{Deserialize, Serialize};
 
-use crate::charts::{ColorPallet, PieChart, PieChartData, PieChartItem};
+use crate::charts::{BarChart, ColorPallet, Dataset, PieChart, PieChartData, PieChartItem, Record};
 
 #[derive(thiserror::Error, Clone, Debug)]
 pub enum FetchError {
@@ -123,6 +123,26 @@ pub fn App(cx: Scope) -> impl IntoView {
         color_pallet: ColorPallet::Default,
     });
 
+    let dataset = create_rw_signal(cx, Dataset {
+        records: vec![
+            Record {
+                value: 5.0
+            },
+            Record {
+                value: 10.0
+            },
+            Record {
+                value: 4.6
+            },
+            Record {
+                value: 1.0
+            },
+            Record {
+                value: 2.0
+            },
+        ]
+    });
+
     view! { cx,
         // <h1>"Hello Leptos"</h1>
         // <button on:click=fetch_callback>"Fetch"</button>
@@ -134,13 +154,18 @@ pub fn App(cx: Scope) -> impl IntoView {
                 <Route
                     path="/piechart"
                     view=move |cx| view! { cx,
-                        <PieChart data=pie_chart_data_1.read_only() />
-                        <PieChart data=pie_chart_data_2.read_only() />
-                        <PieChart data=pie_chart_data_3.read_only() />
-                        <PieChart data=pie_chart_data_4.read_only() />
-                    }
-                >
-                </Route>
+                            <PieChart data=pie_chart_data_1.read_only() />
+                            <PieChart data=pie_chart_data_2.read_only() />
+                            <PieChart data=pie_chart_data_3.read_only() />
+                            <PieChart data=pie_chart_data_4.read_only() />
+                        }
+                />
+                <Route
+                    path="/barchart"
+                    view=move |cx| view! { cx,
+                            <BarChart data=dataset.read_only() />
+                        }
+                />
             </Routes>
         </Router>
     }
