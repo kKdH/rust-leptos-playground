@@ -4,7 +4,7 @@ use leptos::ev::MouseEvent;
 use reqwasm::http::Request;
 use serde::{Deserialize, Serialize};
 
-use crate::charts::{BarChart, ColorPallet, Dataset, PieChart, PieChartData, PieChartItem, Record};
+use crate::charts::{BarChart, BarChartOptions, ColorPallet, Dataset, PieChart, PieChartData, PieChartItem, Record};
 
 #[derive(thiserror::Error, Clone, Debug)]
 pub enum FetchError {
@@ -126,21 +126,28 @@ pub fn App(cx: Scope) -> impl IntoView {
     let dataset = create_rw_signal(cx, Dataset {
         records: vec![
             Record {
+                value: 2.0
+            },
+            Record {
+                value: 6.0
+            },
+            Record {
+                value: 1.6
+            },
+            Record {
+                value: 3.0
+            },
+            Record {
                 value: 5.0
             },
             Record {
-                value: 10.0
-            },
-            Record {
-                value: 4.6
-            },
-            Record {
-                value: 1.0
-            },
-            Record {
-                value: 2.0
+                value: 3.0
             },
         ]
+    });
+
+    let bar_chart_options = create_rw_signal(cx, BarChartOptions {
+        title: String::from("Historical revenue")
     });
 
     view! { cx,
@@ -166,7 +173,7 @@ pub fn App(cx: Scope) -> impl IntoView {
                 <Route
                     path="/barchart"
                     view=move |cx| view! { cx,
-                            <BarChart data=dataset.read_only() />
+                            <BarChart data=dataset.read_only() options=bar_chart_options.read_only() />
                         }
                 />
             </Routes>
