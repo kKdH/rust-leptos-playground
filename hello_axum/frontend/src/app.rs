@@ -149,6 +149,9 @@ pub fn App(cx: Scope) -> impl IntoView {
         // <button on:click=inc_callback>"Inc"</button>
         // <button on:click=reset_callback>"Reset"</button>
         // <p>"Counter: " { move || format!("{}", count.value().get().map(|counter| counter.value).unwrap_or(0)) }</p>
+        <div style="margin-bottom: 20px;">
+            <a href="/piechart">"PieChart"</a>" | "<a href="/barchart">"BarChart"</a>
+        </div>
         <Router>
             <Routes>
                 <Route
