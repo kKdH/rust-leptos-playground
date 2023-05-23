@@ -3,7 +3,7 @@ use core::f32::consts::PI;
 use std::fmt::Display;
 
 use leptos::*;
-use crate::charts::{ColorPallet, IntoColorCode};
+use crate::charts::{ColorPallet, Degree, IntoColorCode};
 
 #[derive(Clone)]
 pub struct PieChartData {
@@ -47,6 +47,7 @@ pub fn PieChart(cx: Scope, data: ReadSignal<PieChartData>) -> impl IntoView {
                     let (x1, y1) = compute_coordinates((value + s) / sum, radius);
                     let (wedge_data, _) = create_signal(cx, WedgeData {
                         value,
+                        percentage,
                         outer_radius: radius,
                         inner_radius: radius * 0.5,
                         x0, y0,
@@ -99,6 +100,7 @@ pub fn PieChart(cx: Scope, data: ReadSignal<PieChartData>) -> impl IntoView {
 struct WedgeData<A>
     where A: Clone + Display + 'static {
     value: A,
+    percentage: f32,
     x0: f32,
     y0: f32,
     x1: f32,
@@ -124,22 +126,29 @@ fn Wedge<A, B, C>(
           B: Fn() -> () + 'static,
           C: Fn() -> () + 'static {
 
-    let WedgeData { value: _, x0, y0, x1, y1, x2, y2, x3, y3, outer_radius: r1, inner_radius: r2, color} = data.get();
+    let WedgeData { value, percentage, x0, y0, x1, y1, x2, y2, x3, y3, outer_radius: r1, inner_radius: r2, color} = data.get();
 
     let path_commands = move || {
         const SCALE: f32 = 1.075;
-        let (x0, y0, x1, y1) = if selected.get() {
-            (x0 * SCALE, y0 * SCALE, x1 * SCALE, y1 * SCALE)
+        let (x0, y0, x1, y1, r1) = if selected.get() {
+            (x0 * SCALE, y0 * SCALE, x1 * SCALE, y1 * SCALE, r1 * SCALE)
         }
         else {
-            (x0, y0, x1, y1)
+            (x0, y0, x1, y1, r1)
+        };
+
+        let large_arc = if percentage <= 50.0 {
+            String::from("0")
+        }
+        else {
+            String::from("1")
         };
 
         format!("\
             M {x0} {y0} \
-            A {r1} {r1} 0 0 1 {x1} {y1} \
+            A {r1} {r1} 0 {large_arc} 1 {x1} {y1} \
             L {x2} {y2} \
-            A {r2} {r2} 0 0 0 {x3} {y3}"
+            A {r2} {r2} 0 {large_arc} 0 {x3} {y3}"
         )
     };
 

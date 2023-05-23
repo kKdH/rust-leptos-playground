@@ -71,7 +71,7 @@ pub fn App(cx: Scope) -> impl IntoView {
     let items = vec![
         PieChartItem {
             name: String::from("A"),
-            value: 50.0,
+            value: 500.0,
         },
         PieChartItem {
             name: String::from("B"),
