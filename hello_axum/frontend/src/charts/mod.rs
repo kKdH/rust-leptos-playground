@@ -30,13 +30,3 @@ impl ColorPallet {
         }
     }
 }
-
-pub trait IntoColorCode {
-    fn into_color_code(self) -> String;
-}
-
-impl IntoColorCode for u32 {
-    fn into_color_code(self) -> String {
-        format!("#{:06x}", self)
-    }
-}

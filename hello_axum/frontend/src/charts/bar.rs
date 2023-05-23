@@ -1,8 +1,9 @@
 use std::fmt::Display;
+use color_art::Color;
 
 use leptos::*;
 
-use crate::charts::{ColorPallet, IntoColorCode};
+use crate::charts::ColorPallet;
 
 pub struct Dataset {
     pub records: Vec<Record>
@@ -38,10 +39,11 @@ pub fn BarChart(cx: Scope, data: ReadSignal<Dataset>) -> impl IntoView {
                 .map(|(index, (record, color))| {
                     let value = record.value;
                     let ratio = value / max;
+                    let color = Color::from_num(*color).unwrap();
                     let rect_height = move || (height() * ratio) as f32;
                     let rect_x = move || index as f32 * rect_width();
                     let rect_y = move || height() - rect_height();
-                    let rect_fill = move || color.into_color_code();
+                    let rect_fill = move || color.hex();
 
                     view! { cx,
                         <rect x=rect_x y=rect_y width=rect_width height=rect_height fill=rect_fill></rect>

@@ -1,9 +1,10 @@
 
 use core::f32::consts::PI;
 use std::fmt::Display;
+use color_art::Color;
 
 use leptos::*;
-use crate::charts::{ColorPallet, Degree, IntoColorCode};
+use crate::charts::ColorPallet;
 
 #[derive(Clone)]
 pub struct PieChartData {
@@ -152,11 +153,15 @@ fn Wedge<A, B, C>(
         )
     };
 
+    let color = move || {
+        Color::from_num(color).unwrap().hex()
+    };
+
     view! { cx,
         <path
             on:mouseenter=move |_| on_mouse_enter()
             on:mouseleave=move |_| on_mouse_exit()
-            fill=move || color.into_color_code()
+            fill=color
             stroke="none"
             d=path_commands>
         </path>
