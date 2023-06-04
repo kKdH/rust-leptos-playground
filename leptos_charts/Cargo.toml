@@ -1,0 +1,13 @@
+[package]
+name = "leptos_charts"
+version = "0.1.0"
+edition= "2021"
+
+[dependencies]
+color-art = { version = "0.3.1" }
+getrandom = { features = ["js"] }
+leptos = { version = "0.3.0", features = ["stable"] }
+nalgebra = { version = "0.32.2" }
+rand = { version = "0.8.5", default-features = false, features = ["alloc"] }
+thiserror = "1.0.40"
+log = "0.4.18"

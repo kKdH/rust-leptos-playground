@@ -8,6 +8,7 @@ members = [
     "hello_oidc",
     "hello_axum/backend",
     "hello_axum/frontend",
+    "leptos_charts"
 ]
 
 [workspace.package]

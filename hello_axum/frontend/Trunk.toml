@@ -1,3 +1,9 @@
+[watch]
+watch = [
+    "./",
+    "../../leptos_charts"
+]
+
 [[proxy]]
 rewrite = "/api"
 backend = "http://localhost:9090/api"

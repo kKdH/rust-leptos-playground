@@ -3,8 +3,10 @@ use leptos_router::*;
 use leptos::ev::MouseEvent;
 use reqwasm::http::Request;
 use serde::{Deserialize, Serialize};
+use leptos_charts::{BarChart, BarChartData, ChartOptions, Extent2};
+use std::str::FromStr;
 
-use crate::charts::{BarChart, BarChartOptions, ColorPallet, Dataset, PieChart, PieChartData, PieChartItem, Record};
+use crate::charts::{ColorPallet, Dataset, PieChart, PieChartData, PieChartItem, Record};
 
 #[derive(thiserror::Error, Clone, Debug)]
 pub enum FetchError {
@@ -146,9 +148,18 @@ pub fn App(cx: Scope) -> impl IntoView {
         ]
     });
 
-    let bar_chart_options = create_rw_signal(cx, BarChartOptions {
-        title: String::from("Historical revenue")
+    let bar_chart_options = create_rw_signal(cx, ChartOptions {
+        extent: Extent2::new(500_f32, 500_f32),
     });
+
+    let bar_chart_data = create_rw_signal(cx, BarChartData::new(
+        vec![String::from("A"), String::from("B"), String::from("C"), String::from("D")],
+        vec![8.0, 3.5, 10.0, 5.0]
+    ));
+
+    // let bar_chart_options = create_rw_signal(cx, BarChartOptions {
+    //     title: String::from("Historical revenue")
+    // });
 
     view! { cx,
         // <h1>"Hello Leptos"</h1>
@@ -173,7 +184,34 @@ pub fn App(cx: Scope) -> impl IntoView {
                 <Route
                     path="/barchart"
                     view=move |cx| view! { cx,
-                            <BarChart data=dataset.read_only() options=bar_chart_options.read_only() />
+                            <div>"Width: "<input type="range" min="0" max="1000" value="500" on:input=move |event| {
+                                let value = event_target_value(&event);
+                                bar_chart_options.update(|options| {
+                                    options.extent.width = f32::from_str(&value).unwrap();
+                                });
+                            }/></div>
+                            <div>"Height:"<input type="range" min="0" max="800" value="400" on:input=move |event| {
+                                let value = event_target_value(&event);
+                                bar_chart_options.update(|options| {
+                                    options.extent.height = f32::from_str(&value).unwrap();
+                                });
+                            }/></div>
+                            <div>"Values: "<input type="text" value="8.0, 3.5, 10.0, 5.0" on:input=move |event| {
+                                let result = event_target_value(&event)
+                                    .split(",")
+                                    .map(|value| {
+                                        f32::from_str(value.trim())
+                                    })
+                                    .collect::<Result<Vec<f32>, _>>();
+                                if let Ok(values) = result {
+                                    bar_chart_data.update(|data| {
+                                        data.set_domain((0..values.len()).map(|value| value.to_string()).collect());
+                                        data.set_values(values);
+                                    });
+                                }
+                            }/></div>
+                            <br/>
+                            <BarChart options=bar_chart_options.read_only() data=bar_chart_data.read_only() />
                         }
                 />
             </Routes>
