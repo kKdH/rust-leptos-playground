@@ -7,6 +7,8 @@ use leptos_charts::{BarChart, BarChartData, ChartOptions, Extent2};
 use std::str::FromStr;
 
 use crate::charts::{ColorPallet, Dataset, PieChart, PieChartData, PieChartItem, Record};
+use crate::qrcode::QRCode;
+
 
 #[derive(thiserror::Error, Clone, Debug)]
 pub enum FetchError {
@@ -168,7 +170,7 @@ pub fn App(cx: Scope) -> impl IntoView {
         // <button on:click=reset_callback>"Reset"</button>
         // <p>"Counter: " { move || format!("{}", count.value().get().map(|counter| counter.value).unwrap_or(0)) }</p>
         <div style="margin-bottom: 20px;">
-            <a href="/piechart">"PieChart"</a>" | "<a href="/barchart">"BarChart"</a>
+            <a href="/piechart">"PieChart"</a>" | "<a href="/barchart">"BarChart"</a>" | "<a href="/qr">"QR Code"</a>
         </div>
         <Router>
             <Routes>
@@ -213,6 +215,12 @@ pub fn App(cx: Scope) -> impl IntoView {
                             <br/>
                             <BarChart options=bar_chart_options.read_only() data=bar_chart_data.read_only() />
                         }
+                />
+                <Route
+                    path="/qr"
+                    view=move |cx| view! { cx,
+                        <QRCode></QRCode>
+                    }
                 />
             </Routes>
         </Router>
